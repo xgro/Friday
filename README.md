@@ -1,0 +1,2 @@
+# Friday
+Slack Bot @ChatGPT
