@@ -1,0 +1,12 @@
+{
+  "name": "slack-chat",
+  "version": "1.0.0",
+  "description": "Serverless Framework Python SQS Producer-Consumer on AWS",
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless-dotenv-plugin": "^4.0.2",
+    "serverless-ignore": "^0.2.1",
+    "serverless-lift": "^1.21.0"
+  }
+}

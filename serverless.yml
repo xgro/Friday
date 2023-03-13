@@ -1,0 +1,48 @@
+service: slack-chat
+frameworkVersion: '3'
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: ap-northeast-2
+
+constructs:
+  jobs:
+    type: queue
+    worker:
+      handler: handler_consumer.lambda_handler
+      environment:
+        MODEL_ID:  ${env:MODEL_ID}
+        BOT_NAME: ${env:BOT_NAME}
+        OPENAI_KEY: ${env:OPENAI_KEY}
+        SLACK_TOKEN: ${env:SLACK_TOKEN}
+      layers:
+        - ${env:LAYER_SLACK}
+        - ${env:LAYER_OPENAI}
+      package:
+        patterns:
+          - 'handler_consumer.py'
+
+functions:
+  producer:
+    handler: handler_producer.lambda_handler
+    events:
+      - httpApi:
+          method: any
+          path: /
+    environment:
+      QUEUE_URL: ${construct:jobs.queueUrl}
+      API_APP_ID: ${env:API_APP_ID}
+    package:
+      patterns:
+        - 'handler_producer.py'
+
+plugins:
+  - serverless-lift
+
+package:
+  individually: true
+  patterns:
+    - '!**'
