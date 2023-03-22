@@ -1,0 +1,78 @@
+service: slack-chat
+frameworkVersion: '3'
+
+# Load environment variables from .env files (default: false)
+useDotenv: true
+
+provider:
+  name: aws
+  # Default stage (default: dev)
+  stage: dev
+  # Default region (default: us-east-1)
+  region: ap-northeast-2
+  # The AWS profile to use to deploy (default: "default" profile)
+  profile: default
+  
+  # Lambda Global Settings
+  runtime: python3.8
+  # Default memory size for functions (default: 1024MB)
+  memorySize: 256
+  # Duration for CloudWatch log retention (default: forever).
+  # Can be overridden for each function separately inside the functions block, see below on page.
+  logRetentionInDays: 5
+  # Use function versioning (enabled by default)
+  versionFunctions: false
+  # Processor architecture: 'x86_64' or 'arm64' via Graviton2 (default: x86_64)
+  architecture: x86_64
+
+constructs:
+  jobs:
+    type: queue
+    worker:
+      handler: handler_consumer.lambda_handler
+      environment:
+        MODEL_ID:  ${env:MODEL_ID}
+        BOT_NAME: ${env:BOT_NAME}
+        OPENAI_KEY: ${env:OPENAI_KEY}
+        SLACK_TOKEN: ${env:SLACK_TOKEN}
+      package:
+        patterns:
+          - 'handler_consumer.py'
+      timeout: 300
+      maximumRetryAttempts: 0
+
+functions:
+  producer:
+    handler: handler_producer.lambda_handler
+    events:
+      - httpApi:
+          method: any
+          path: /
+    environment:
+      QUEUE_URL: ${construct:jobs.queueUrl}
+    package:
+      patterns:
+        - 'handler_producer.py'
+    maximumRetryAttempts: 0
+
+plugins:
+  - serverless-lift
+  - serverless-python-requirements
+
+package:
+  individually: true
+  patterns:
+    - '!**'
+
+custom:
+  pythonRequirements:
+    useDownloadCache: true
+    useStaticCache: true
+    layer:
+      name: ${env:BOT_NAME}-slackGPT
+      description: Python requirements lambda layer
+      compatibleRuntimes:
+        - python3.8
+      licenseInfo: GPLv3
+      allowedAccounts:
+        - '*'
