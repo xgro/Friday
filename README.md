@@ -25,7 +25,8 @@ Here is an introduction to implementing ChatGPT, a chatbot using Slack bot and O
 <br>
 
 # Architecture
-![image](https://user-images.githubusercontent.com/76501289/226831214-1956651a-9024-449e-9557-eab46bb94953.png)
+![image](https://user-images.githubusercontent.com/76501289/226859596-a8ff614b-9840-460d-a1f8-16382dd754e6.png)
+
 
 <br>
 
