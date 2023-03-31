@@ -33,7 +33,9 @@ constructs:
       environment:
         MODEL_ID:  ${env:MODEL_ID}
         BOT_NAME: ${env:BOT_NAME}
-        OPENAI_KEY: ${env:OPENAI_KEY}
+        SYSTEM_PROMPT: ${env:SYSTEM_PROMPT}
+        HISTORY: ${env:HISTORY}
+        OPENAI_TOKEN: ${env:OPENAI_TOKEN}
         SLACK_TOKEN: ${env:SLACK_TOKEN}
       package:
         patterns:
