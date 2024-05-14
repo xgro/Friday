@@ -1,0 +1,35 @@
+{
+	"user": "U04A9G3HHHV",
+	"type": "message",
+	"ts": "1715661815.044219",
+	"bot_id": "B04B2MHP3UZ",
+	"app_id": "A04AHE9QN4E",
+	"text": "This is fallback text.",
+	"team": "T049SU8EWBS",
+	"bot_profile": {
+		"id": "B04B2MHP3UZ",
+		"deleted": false,
+		"name": "Friday",
+		"updated": 1678197160,
+		"app_id": "A04AHE9QN4E",
+		"icons": {
+			"image_36": "https://avatars.slack-edge.com/2023-03-07/4909504437171_32d7d0144eaf48dc25d1_36.jpg",
+			"image_48": "https://avatars.slack-edge.com/2023-03-07/4909504437171_32d7d0144eaf48dc25d1_48.jpg",
+			"image_72": "https://avatars.slack-edge.com/2023-03-07/4909504437171_32d7d0144eaf48dc25d1_72.jpg"
+		},
+		"team_id": "T049SU8EWBS"
+	},
+	"thread_ts": "1715658074.229389",
+	"parent_user_id": "U0495MA5DPW",
+	"blocks": [
+		{
+			"type": "section",
+			"block_id": "eAsDz",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Thinking...",
+				"verbatim": false
+			}
+		}
+	]
+}

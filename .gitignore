@@ -15,8 +15,14 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-
+.DS_Store
 # Serverless directories
 .serverless
 .env
 node_modules
+
+# Mypy
+.mypy_cache/
+
+# python
+.venv/

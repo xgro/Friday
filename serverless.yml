@@ -11,10 +11,10 @@ provider:
   # Default region (default: us-east-1)
   region: ap-northeast-2
   # The AWS profile to use to deploy (default: "default" profile)
-  profile: default
+  profile: user
   
   # Lambda Global Settings
-  runtime: python3.8
+  runtime: python3.11
   # Default memory size for functions (default: 1024MB)
   memorySize: 256
   # Duration for CloudWatch log retention (default: forever).
@@ -23,7 +23,7 @@ provider:
   # Use function versioning (enabled by default)
   versionFunctions: false
   # Processor architecture: 'x86_64' or 'arm64' via Graviton2 (default: x86_64)
-  architecture: x86_64
+  architecture: arm64
 
 constructs:
   jobs:
@@ -31,17 +31,18 @@ constructs:
     worker:
       handler: handler_consumer.lambda_handler
       environment:
-        MODEL_ID:  ${env:MODEL_ID}
-        BOT_NAME: ${env:BOT_NAME}
+        MODEL:  ${env:MODEL}
         SYSTEM_PROMPT: ${env:SYSTEM_PROMPT}
-        HISTORY: ${env:HISTORY}
-        OPENAI_TOKEN: ${env:OPENAI_TOKEN}
+        OPENAI_API_KEY: ${env:OPENAI_API_KEY}
         SLACK_TOKEN: ${env:SLACK_TOKEN}
       package:
         patterns:
           - 'handler_consumer.py'
+          - 'models/**'
       timeout: 300
       maximumRetryAttempts: 0
+      layers:
+        - {Ref: PythonRequirementsLambdaLayer} # requirements.txt로 만든 layer
 
 functions:
   producer:
@@ -74,7 +75,7 @@ custom:
       name: ${env:BOT_NAME}-slackGPT
       description: Python requirements lambda layer
       compatibleRuntimes:
-        - python3.8
+        - python3.11
       licenseInfo: GPLv3
       allowedAccounts:
         - '*'
