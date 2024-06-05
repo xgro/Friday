@@ -32,7 +32,6 @@ constructs:
       handler: handler_consumer.lambda_handler
       environment:
         MODEL:  ${env:MODEL}
-        SYSTEM_PROMPT: ${env:SYSTEM_PROMPT}
         OPENAI_API_KEY: ${env:OPENAI_API_KEY}
         SLACK_TOKEN: ${env:SLACK_TOKEN}
       package:
