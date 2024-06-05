@@ -71,7 +71,7 @@ custom:
     useDownloadCache: true
     useStaticCache: true
     layer:
-      name: ${env:BOT_NAME}-slackGPT
+      name: slackGPT
       description: Python requirements lambda layer
       compatibleRuntimes:
         - python3.11
