@@ -11,7 +11,7 @@ provider:
   # Default region (default: us-east-1)
   region: ap-northeast-2
   # The AWS profile to use to deploy (default: "default" profile)
-  profile: default
+  # profile: default
   
   # Lambda Global Settings
   runtime: python3.11
