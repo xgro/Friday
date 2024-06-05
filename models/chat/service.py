@@ -10,15 +10,12 @@ class ChatService:
         self.system_prompt = os.environ.get("SYSTEM_PROMPT")
         self.client = openai
 
-    def chat_with_chatgpt(
+    def generate_response(
         self,
         user_input: str,
         history: list,
-        slack_service: SlackService,
     ):
-        """
-        대화 내용 작성
-        """
+        """대화 내용 작성"""
         conversation = []
         # 시스템 이름 및 시스템 프롬프트 추가
         contents = f"""
@@ -68,16 +65,9 @@ class ChatService:
                     buffer_text += buffer
                     buffer = ""
                     # 메시지 업데이트
-                    slack_service.edit_thread_message(buffer_text.replace("**", "*"))
+                    yield buffer_text.replace("**", "*")
                     # print(f"Updated message: {text}")
 
         if buffer:
             buffer_text += buffer
-            slack_service.edit_thread_message(buffer_text.replace("**", "*"))
-
-        # 최종적으로 전체 메시지를 한번 더 업데이트
-        # slack_service.edit_thread_message(text.replace("**", "*"))
-
-        # return text
-
-        # return response.choices[0].message.content  # type: ignore
+            yield buffer_text.replace("**", "*")
