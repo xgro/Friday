@@ -61,13 +61,13 @@ class ChatService:
                     first_chunk_received = True
                     continue  # 첫번째 빈 문자를 보내는 것을 방지
 
-                if len(buffer) >= 200:
+                if len(buffer) >= 150:
                     buffer_text += buffer
                     buffer = ""
                     # 메시지 업데이트
-                    yield buffer_text.replace("**", "*")
+                    yield buffer_text
                     # print(f"Updated message: {text}")
 
         if buffer:
             buffer_text += buffer
-            yield buffer_text.replace("**", "*")
+            yield buffer_text

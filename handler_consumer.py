@@ -26,8 +26,10 @@ def lambda_handler(event, context):
     """
     chat = ChatService()
     # 대화 내용 생성
+    full_sentence = ""
     for response_chunk in chat.generate_response(user_input, history):
         slack.edit_thread_message(response_chunk)
+        full_sentence += response_chunk
 
     # """
     # 슬랙으로 메시지 전송

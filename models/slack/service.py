@@ -54,13 +54,15 @@ class SlackService:
         )
 
     def edit_thread_message(self, text):
+        text = text.replace(f"<@{self.bot_id}> ", "").replace("**", "*")
+
         # chat_update() 메서드 호출
         blocks = [
             {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": text.replace(f"<@{self.bot_id}> ", ""),
+                    "text": text,
                 },
             }
         ]
