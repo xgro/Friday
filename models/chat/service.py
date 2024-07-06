@@ -9,6 +9,7 @@ class ChatService:
         self.model = os.environ.get("MODEL") or "gpt-3.5-turbo"
         self.system_prompt = os.environ.get("SYSTEM_PROMPT")
         self.client = openai
+        self.stream = os.environ.get("STREAM") or False
 
     def generate_response(
         self,
@@ -21,6 +22,7 @@ class ChatService:
         contents = f"""
 - System name is Friday. 
 - {self.system_prompt}
+- You must reply politely.
 - this is a conversation between a user and a system as Slack messages.
 - When you explain the code blocks, you must no contain the language in the code block."""
 
@@ -47,27 +49,42 @@ class ChatService:
         Thinking 메시지 업데이트
         """
         # print("response: ", response)
-        for chunk in self.client.ChatCompletion.create(
-            model=self.model,
-            messages=conversation,
-            stream=True,
-        ):
-            if "content" in chunk["choices"][0]["delta"]:
-                text_chunk = chunk["choices"][0]["delta"]["content"]
-                buffer += text_chunk
-                text += text_chunk
+        stream = self.stream
+        if stream == "true":
+            stream = True
+        else:
+            stream = False
 
-                if not first_chunk_received:
-                    first_chunk_received = True
-                    continue  # 첫번째 빈 문자를 보내는 것을 방지
+        if stream:
+            for chunk in self.client.ChatCompletion.create(
+                model=self.model,
+                messages=conversation,
+                stream=stream,
+            ):
+                if "content" in chunk["choices"][0]["delta"]:
+                    text_chunk = chunk["choices"][0]["delta"]["content"]
+                    buffer += text_chunk
+                    text += text_chunk
 
-                if len(buffer) >= 150:
-                    buffer_text += buffer
-                    buffer = ""
-                    # 메시지 업데이트
-                    yield buffer_text
-                    # print(f"Updated message: {text}")
+                    if not first_chunk_received:
+                        first_chunk_received = True
+                        continue  # 첫번째 빈 문자를 보내는 것을 방지
 
-        if buffer:
-            buffer_text += buffer
-            yield buffer_text
+                    if len(buffer) >= 150:
+                        buffer_text += buffer
+                        buffer = ""
+                        # 메시지 업데이트
+                        yield buffer_text
+                        # print(f"Updated message: {text}")
+
+            if buffer:
+                buffer_text += buffer
+                yield buffer_text
+        else:
+            response = self.client.ChatCompletion.create(
+                model=self.model,
+                messages=conversation,
+            )
+
+            text = response["choices"][0]["message"]["content"]
+            yield text

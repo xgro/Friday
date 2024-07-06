@@ -34,6 +34,7 @@ constructs:
         MODEL:  ${env:MODEL}
         OPENAI_API_KEY: ${env:OPENAI_API_KEY}
         SLACK_TOKEN: ${env:SLACK_TOKEN}
+        STREAM: ${env:STREAM}
       package:
         patterns:
           - 'handler_consumer.py'
