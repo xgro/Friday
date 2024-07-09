@@ -11,6 +11,7 @@ env:
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
   AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
   AWS_REGION: ap-northeast-2
+  STREAM: ${{ secrets.STREAM }}
 
 permissions:
   id-token: write
@@ -47,6 +48,7 @@ jobs:
           echo "MODEL=${MODEL}" >> .env
           echo "SLACK_TOKEN=${SLACK_TOKEN}" >> .env
           echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> .env
+          echo "STREAM=${STREAM} >> .env
 
       - name: AWS Credentials 설정
         uses: aws-actions/configure-aws-credentials@v2
