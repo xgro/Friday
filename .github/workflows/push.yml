@@ -26,19 +26,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Python 3.11 🐍
+      - name: Setup Python 3.12 🐍
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: npm install
 
       - name: Install Serverless Framework Lift
-        run: npx serverless plugin install --name serverless-lift
+        run: npx serverless@v3 plugin install --name serverless-lift
 
       - name: Install Python dependencies
-        run: npx serverless plugin install --name serverless-python-requirements
+        run: npx serverless@v3 plugin install --name serverless-python-requirements
 
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -57,4 +57,4 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to AWS Lambda 🚀
-        run: npx serverless deploy
+        run: npx serverless@v3 deploy
