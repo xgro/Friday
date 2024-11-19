@@ -12,9 +12,9 @@ provider:
   region: ap-northeast-2
   # The AWS profile to use to deploy (default: "default" profile)
   # profile: default
-  
+
   # Lambda Global Settings
-  runtime: python3.11
+  runtime: python3.12
   # Default memory size for functions (default: 1024MB)
   memorySize: 256
   # Duration for CloudWatch log retention (default: forever).
@@ -31,41 +31,41 @@ constructs:
     worker:
       handler: handler_consumer.lambda_handler
       environment:
-        MODEL:  ${env:MODEL}
+        MODEL: ${env:MODEL}
         OPENAI_API_KEY: ${env:OPENAI_API_KEY}
         SLACK_TOKEN: ${env:SLACK_TOKEN}
         STREAM: ${env:STREAM}
       package:
         patterns:
-          - 'handler_consumer.py'
-          - 'models/**'
+        - 'handler_consumer.py'
+        - 'models/**'
       timeout: 300
       maximumRetryAttempts: 0
       layers:
-        - {Ref: PythonRequirementsLambdaLayer} # requirements.txt로 만든 layer
+      - { Ref: PythonRequirementsLambdaLayer } # requirements.txt로 만든 layer
 
 functions:
   producer:
     handler: handler_producer.lambda_handler
     events:
-      - httpApi:
-          method: any
-          path: /
+    - httpApi:
+        method: any
+        path: /
     environment:
       QUEUE_URL: ${construct:jobs.queueUrl}
     package:
       patterns:
-        - 'handler_producer.py'
+      - 'handler_producer.py'
     maximumRetryAttempts: 0
 
 plugins:
-  - serverless-lift
-  - serverless-python-requirements
+- serverless-lift
+- serverless-python-requirements
 
 package:
   individually: true
   patterns:
-    - '!**'
+  - '!**'
 
 custom:
   pythonRequirements:
@@ -75,7 +75,7 @@ custom:
       name: slackGPT
       description: Python requirements lambda layer
       compatibleRuntimes:
-        - python3.11
+      - python3.12
       licenseInfo: GPLv3
       allowedAccounts:
-        - '*'
+      - '*'
