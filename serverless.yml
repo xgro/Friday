@@ -9,14 +9,14 @@ provider:
   # Default stage (default: dev)
   stage: dev
   # Default region (default: us-east-1)
-  region: ap-northeast-2
+  region: ap-northeast-1
   # The AWS profile to use to deploy (default: "default" profile)
   # profile: default
 
   # Lambda Global Settings
   runtime: python3.12
   # Default memory size for functions (default: 1024MB)
-  memorySize: 256
+  memorySize: 1536
   # Duration for CloudWatch log retention (default: forever).
   # Can be overridden for each function separately inside the functions block, see below on page.
   logRetentionInDays: 5
