@@ -1,0 +1,74 @@
+name: Deploy to AWS Lambda
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        required: true
+        type: choice
+        options:
+          - gpt-4.1
+          - gpt-4o
+          - gpt-4o-mini
+        default: "gpt-4o"
+      region:
+        required: true
+        type: choice
+        options:
+          - ap-northeast-2
+          - ap-northeast-1
+        default: "ap-northeast-2"
+
+env:
+  MODEL: ${{ inputs.model }}
+  SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+  AWS_REGION: ${{ inputs.region }}
+  STREAM: ${{ secrets.STREAM }}
+
+permissions:
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python 3.12 🐍
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Serverless Framework Lift
+        run: npx serverless@v3 plugin install --name serverless-lift
+
+      - name: Install Python dependencies
+        run: npx serverless@v3 plugin install --name serverless-python-requirements
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Set up environment variables 📝
+        run: |
+          echo "MODEL=${MODEL}" >> .env
+          echo "SLACK_TOKEN=${SLACK_TOKEN}" >> .env
+          echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> .env
+          echo "STREAM=${STREAM}" >> .env
+
+      - name: AWS Credentials 설정
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to AWS Lambda 🚀
+        run: npx serverless@v3 deploy
